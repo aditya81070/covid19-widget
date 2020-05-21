@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledFooterContainer = styled.div`
+const StyledFooterContainer = styled.div.attrs((props) => ({
+  style: {
+    backgroundColor: props.backgroundColor || '#d5f6e3',
+  },
+}))`
   height: 80px;
   width: 100%;
   display: flex;
@@ -10,12 +14,15 @@ const StyledFooterContainer = styled.div`
   justify-content: center;
   box-sizing: border-box;
   padding: 16px;
-  background-color: ${(props) => props.backgroundColor || '#d5f6e3'};
 `;
-const StyledFooterText = styled.div`
+const StyledFooterText = styled.div.attrs((props) => ({
+  style: {
+    fontSize: `${props.fontSize || 16}px`,
+    color: props.color || '#212121',
+  },
+}))`
   overflow: hidden;
-  font-size: ${(props) => props.fontSize || 16}px;
-  color: ${(props) => props.color || '#212121'};
+  font-size: 16px;
   max-width: 80%;
   text-align: center;
 `;

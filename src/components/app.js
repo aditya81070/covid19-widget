@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from './home';
 import WidgetCreator from './widget-creator';
+import Widget from './widget';
 function App() {
   return (
     <Switch>
@@ -11,6 +12,7 @@ function App() {
       <Route path='/widget-creator'>
         <WidgetCreator />
       </Route>
+      <Route path='/widget/:id' component={Widget} />
     </Switch>
   );
 }
