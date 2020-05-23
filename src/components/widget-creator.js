@@ -90,6 +90,8 @@ const WidgetCreator = (props) => {
     footerBackground: theme.footerBackground,
     footerColor: theme.footerColor,
     selectedState: '',
+    width: 1200,
+    height: 800,
     data: null,
     isLoading: true,
     isError: false,
@@ -105,6 +107,8 @@ const WidgetCreator = (props) => {
     headerBackground,
     footerBackground,
     footerColor,
+    width,
+    height,
   } = state;
   const states = data ? Object.keys(data) : [];
 
@@ -171,6 +175,21 @@ const WidgetCreator = (props) => {
         <StyledFormContainer onSubmit={handleFormSubmit}>
           <FormTitle>Enter Widget Details</FormTitle>
           <StyledInputContainer>
+            <label htmlFor='selectedState'>Select State</label>
+            <select
+              id='selectedState'
+              name='selectedState'
+              value={selectedState}
+              onChange={handleInputChange}
+            >
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </StyledInputContainer>
+          <StyledInputContainer>
             <label htmlFor='headerText'>Header Text</label>
             <input
               id='headerText'
@@ -234,21 +253,28 @@ const WidgetCreator = (props) => {
               />
             </InputRowItem>
           </InputRow>
-          <StyledInputContainer>
-            <label htmlFor='selectedState'>Select State</label>
-            <select
-              id='selectedState'
-              name='selectedState'
-              value={selectedState}
-              onChange={handleInputChange}
-            >
-              {states.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-          </StyledInputContainer>
+          <InputRow>
+            <InputRowItem>
+              <label htmlFor='width'>Width (in px)</label>
+              <input
+                id='width'
+                name='width'
+                value={width}
+                onChange={handleInputChange}
+                required
+              />
+            </InputRowItem>
+            <InputRowItem>
+              <label htmlFor='height'>Height (in px)</label>
+              <input
+                id='height'
+                name='height'
+                value={height}
+                onChange={handleInputChange}
+                required
+              />
+            </InputRowItem>
+          </InputRow>
           <ButtonContainer>
             <Button type='submit'>Get your widget</Button>
           </ButtonContainer>
