@@ -7,6 +7,10 @@ class Widget extends React.Component {
     headerText: '',
     footerText: '',
     selectedState: '',
+    headerColor: '',
+    headerBackground: '',
+    footerBackground: '',
+    footerColor: '',
     data: null,
     isError: false,
     isLoading: true,
@@ -43,6 +47,10 @@ class Widget extends React.Component {
       headerText,
       selectedState,
       footerText,
+      headerBackground,
+      headerColor,
+      footerBackground,
+      footerColor,
       data,
       isError,
       isLoading,
@@ -56,7 +64,11 @@ class Widget extends React.Component {
     return (
       <WidgetPreview
         headerText={headerText}
+        headerBackground={headerBackground}
+        headerColor={headerColor}
         footerText={footerText}
+        footerBackground={footerBackground}
+        footerColor={footerColor}
         data={data}
         stateName={selectedState}
       />

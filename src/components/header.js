@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const StyledHeader = styled.header.attrs((props) => ({
   style: {
-    backgroundColor: props.backgroundColor || '#2c498d',
+    background: props.background || '#2c498d',
   },
 }))`
   display: flex;
@@ -17,16 +17,15 @@ const StyledHeader = styled.header.attrs((props) => ({
 
 const StyledHeading = styled.h1.attrs((props) => ({
   style: {
-    fontSize: `${props.fontSize || 20}px`,
     color: props.color || '#fff',
   },
-}))``;
-const Header = ({ title, backgroundColor, fontSize, color }) => {
+}))`
+  font-size: 20px;
+`;
+const Header = ({ title, background, color }) => {
   return (
-    <StyledHeader backgroundColor={backgroundColor}>
-      <StyledHeading fontSize={fontSize} color={color}>
-        {title}
-      </StyledHeading>
+    <StyledHeader background={background}>
+      <StyledHeading color={color}>{title}</StyledHeading>
     </StyledHeader>
   );
 };

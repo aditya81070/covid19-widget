@@ -3,9 +3,7 @@ import styled from 'styled-components';
 
 const StyledFooterContainer = styled.div.attrs((props) => ({
   style: {
-    background:
-      props.backgroundColor ||
-      'linear-gradient(to bottom, #0f7f8f 0%, #185784 100%)',
+    background: props.background || '#185784',
   },
 }))`
   min-height: 56px;
@@ -18,20 +16,18 @@ const StyledFooterContainer = styled.div.attrs((props) => ({
 `;
 const StyledFooterText = styled.p.attrs((props) => ({
   style: {
-    fontSize: `${props.fontSize || 20}px`,
     color: props.color || '#fff',
   },
 }))`
   max-width: 80%;
   text-align: center;
+  font-size: 20px;
 `;
 
-const Footer = ({ title, backgroundColor, fontSize, color }) => {
+const Footer = ({ title, background, color }) => {
   return (
-    <StyledFooterContainer backgroundColor={backgroundColor}>
-      <StyledFooterText color={color} fontSize={fontSize}>
-        {title}
-      </StyledFooterText>
+    <StyledFooterContainer background={background}>
+      <StyledFooterText color={color}>{title}</StyledFooterText>
     </StyledFooterContainer>
   );
 };

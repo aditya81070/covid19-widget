@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import Header from './header';
 import WidgetPreview from './widget-preview';
 import StyledTitle from './styled-title';
+import theme from '../theme';
 const formReducer = (state, action) => {
   const { type, data } = action;
   return {
@@ -35,9 +36,7 @@ const StyledFormContainer = styled.form`
 const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  &:not(:first-of-type) {
-    margin-top: 8px;
-  }
+  margin-top: 16px;
   & > label {
     font-weight: bold;
     color: #212121;
@@ -46,6 +45,20 @@ const StyledInputContainer = styled.div`
   & > select {
     margin-top: 8px;
     padding: 8px;
+  }
+`;
+
+const InputRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`;
+
+const InputRowItem = styled(StyledInputContainer)`
+  width: 48%;
+  @media screen and (max-width: 568px) {
+    width: 100%;
   }
 `;
 
@@ -72,6 +85,10 @@ const WidgetCreator = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
     headerText: 'Header text',
     footerText: 'Footer Text',
+    headerColor: theme.headerColor,
+    headerBackground: theme.headerBackground,
+    footerBackground: theme.footerBackground,
+    footerColor: theme.footerColor,
     selectedState: '',
     data: null,
     isLoading: true,
@@ -84,6 +101,10 @@ const WidgetCreator = (props) => {
     data,
     isLoading,
     isError,
+    headerColor,
+    headerBackground,
+    footerBackground,
+    footerColor,
   } = state;
   const states = data ? Object.keys(data) : [];
 
@@ -110,8 +131,24 @@ const WidgetCreator = (props) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    const { headerText, footerText, selectedState } = state;
-    const data = { headerText, footerText, selectedState };
+    const {
+      headerText,
+      footerText,
+      selectedState,
+      headerBackground,
+      headerColor,
+      footerBackground,
+      footerColor,
+    } = state;
+    const data = {
+      headerText,
+      footerText,
+      selectedState,
+      headerBackground,
+      headerColor,
+      footerBackground,
+      footerColor,
+    };
     const token = jwt.sign(
       {
         data: data,
@@ -143,6 +180,28 @@ const WidgetCreator = (props) => {
               required
             />
           </StyledInputContainer>
+          <InputRow>
+            <InputRowItem>
+              <label htmlFor='headerBackground'>Header Background</label>
+              <input
+                id='headerBackground'
+                name='headerBackground'
+                value={headerBackground}
+                onChange={handleInputChange}
+                required
+              />
+            </InputRowItem>
+            <InputRowItem>
+              <label htmlFor='headerColor'>Header Text Color</label>
+              <input
+                id='headerColor'
+                name='headerColor'
+                value={headerColor}
+                onChange={handleInputChange}
+                required
+              />
+            </InputRowItem>
+          </InputRow>
           <StyledInputContainer>
             <label htmlFor='footerText'>Footer Text</label>
             <input
@@ -153,6 +212,28 @@ const WidgetCreator = (props) => {
               required
             />
           </StyledInputContainer>
+          <InputRow>
+            <InputRowItem>
+              <label htmlFor='footerBackground'>Footer Background</label>
+              <input
+                id='footerBackground'
+                name='footerBackground'
+                value={footerBackground}
+                onChange={handleInputChange}
+                required
+              />
+            </InputRowItem>
+            <InputRowItem>
+              <label htmlFor='footerColor'>Footer Text Color</label>
+              <input
+                id='footerColor'
+                name='footerColor'
+                value={footerColor}
+                onChange={handleInputChange}
+                required
+              />
+            </InputRowItem>
+          </InputRow>
           <StyledInputContainer>
             <label htmlFor='selectedState'>Select State</label>
             <select
@@ -176,7 +257,11 @@ const WidgetCreator = (props) => {
         <StyledPreviewContainer>
           <WidgetPreview
             headerText={headerText}
+            headerBackground={headerBackground}
+            headerColor={headerColor}
             footerText={footerText}
+            footerBackground={footerBackground}
+            footerColor={footerColor}
             data={data}
             stateName={selectedState}
           />

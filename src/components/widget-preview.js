@@ -10,12 +10,29 @@ const StyledPreviewContainer = styled.div`
   overflow-y: auto;
 `;
 
-const WidgetPreview = ({ headerText, stateName, data, footerText }) => {
+const WidgetPreview = ({
+  headerText,
+  stateName,
+  data,
+  footerText,
+  footerBackground,
+  footerColor,
+  headerBackground,
+  headerColor,
+}) => {
   return (
     <StyledPreviewContainer>
-      <Header title={headerText} />
+      <Header
+        title={headerText}
+        background={headerBackground}
+        color={headerColor}
+      />
       <PreviewData data={data} state={stateName} />
-      <Footer title={footerText} />
+      <Footer
+        title={footerText}
+        background={footerBackground}
+        color={footerColor}
+      />
     </StyledPreviewContainer>
   );
 };
