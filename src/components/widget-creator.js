@@ -1,10 +1,12 @@
-import React, { useReducer, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import styled from 'styled-components';
 import jwt from 'jsonwebtoken';
 import Header from './header';
+import Button from './button';
 import WidgetPreview from './widget-preview';
 import StyledTitle from './styled-title';
 import theme from '../theme';
+import EmbeddedCode from './embeddable-code';
 const formReducer = (state, action) => {
   const { type, data } = action;
   return {
@@ -67,15 +69,6 @@ const ButtonContainer = styled.div`
   margin: 8px 0;
 `;
 
-const Button = styled.button`
-  padding: 8px;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  cursor: pointer;
-  background: #2c498d;
-  color: #fff;
-`;
-
 const FormTitle = styled(StyledTitle)`
   margin-top: 0;
 `;
@@ -86,27 +79,6 @@ const StyledPreviewContainer = styled.div`
   border: 1px solid gray;
   margin: 16px 0 16px;
   box-shadow: 4px 4px 4px #9e7f5b;
-`;
-const StyledCodeContainer = styled.div`
-  border: 1px solid gray;
-  padding: 0px 8px 8px;
-`;
-
-const StyledCode = styled.div`
-  border: 1px solid gray;
-  padding: 8px;
-  width: 100%;
-  word-break: break-word;
-  box-sizing: border-box;
-`;
-
-const CodeButtonContainer = styled.div`
-  display: flex;
-  margin-top: 16px;
-
-  & > button {
-    margin-left: 8px;
-  }
 `;
 const WidgetCreator = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
@@ -141,7 +113,6 @@ const WidgetCreator = (props) => {
   } = state;
   const states = data ? Object.keys(data) : [];
 
-  const codeRef = useRef();
   useEffect(() => {
     fetch('https://api.covid19india.org/state_district_wise.json')
       .then((res) => res.json())
@@ -192,34 +163,6 @@ const WidgetCreator = (props) => {
     dispatch({ type: 'token', data: jwtToken });
   };
 
-  const handleCopyCode = (e) => {
-    const textarea = document.createElement('textarea');
-    textarea.style.position = 'fixed';
-    textarea.style.top = 0;
-    textarea.style.left = 0;
-
-    textarea.style.border = 'none';
-    textarea.style.outline = 'none';
-    textarea.style.boxShadow = 'none';
-    // Avoid flash of white box if rendered for any reason.
-    textarea.style.background = 'transparent';
-    textarea.value = codeRef.current.textContent;
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    let success = false;
-    try {
-      success = document.execCommand('copy');
-    } catch (err) {
-      success = false;
-    }
-    document.body.removeChild(textarea);
-    if (success) {
-      window.alert('code copied to clipboard');
-    } else {
-      window.alert('can not copy. Please try manually');
-    }
-  };
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -337,25 +280,12 @@ const WidgetCreator = (props) => {
             <Button type='submit'>Get your widget</Button>
           </ButtonContainer>
           {token && (
-            <StyledCodeContainer>
-              <StyledTitle>Add following code to your website</StyledTitle>
-              <StyledCode>
-                <code ref={codeRef}>
-                  {`<iframe title="${selectedState}'s Covid19 data" src="http://localhost:3000/widget/${token}" width="${width}" height="${height}" loading="lazy">Browser do not support iframe </iframe>`}
-                </code>
-              </StyledCode>
-              <CodeButtonContainer>
-                <Button type='button' onClick={handleCopyCode}>
-                  Copy
-                </Button>
-                <Button
-                  type='button'
-                  onClick={() => dispatch({ type: 'token', data: '' })}
-                >
-                  Close
-                </Button>
-              </CodeButtonContainer>
-            </StyledCodeContainer>
+            <EmbeddedCode
+              token={token}
+              width={width}
+              height={height}
+              dispatch={dispatch}
+            />
           )}
         </StyledFormContainer>
         <StyledTitle>Widget Preview</StyledTitle>
