@@ -59,4 +59,5 @@ export const StyledPreviewContainer = styled.div`
   border: 1px solid gray;
   margin: 16px 0 16px;
   box-shadow: 4px 4px 4px #9e7f5b;
+  box-sizing: border-box;
 `;

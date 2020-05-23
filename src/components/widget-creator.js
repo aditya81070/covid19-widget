@@ -230,6 +230,7 @@ const WidgetCreator = (props) => {
               width={width}
               height={height}
               dispatch={dispatch}
+              stateName={selectedState}
             />
           )}
         </StyledFormContainer>

@@ -25,7 +25,7 @@ const CodeButtonContainer = styled.div`
   }
 `;
 
-const EmbeddedCode = ({ token, selectedState, dispatch, width, height }) => {
+const EmbeddedCode = ({ token, stateName, dispatch, width, height }) => {
   const codeRef = useRef();
   const handleCopyCode = (e) => {
     const textarea = document.createElement('textarea');
@@ -60,7 +60,7 @@ const EmbeddedCode = ({ token, selectedState, dispatch, width, height }) => {
       <StyledTitle>Add following code to your website</StyledTitle>
       <StyledCode>
         <code ref={codeRef}>
-          {`<iframe title="${selectedState}'s Covid19 data" src="http://localhost:3000/widget/${token}" width="${width}" height="${height}" loading="lazy">Browser do not support iframe </iframe>`}
+          {`<iframe title="${stateName}'s Covid19 data" src="http://localhost:3000/widget/${token}" width="${width}" height="${height}" loading="lazy">Browser do not support iframe </iframe>`}
         </code>
       </StyledCode>
       <CodeButtonContainer>
