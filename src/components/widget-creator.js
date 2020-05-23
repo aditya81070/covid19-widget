@@ -1,259 +1,174 @@
-import React from 'react';
+import React, { useReducer, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
-import Header from './header';
-import Footer from './footer';
+import WidgetPreview from './widget-preview';
 import jwt from 'jsonwebtoken';
+
+const formReducer = (state, action) => {
+  const { type, data } = action;
+  return {
+    ...state,
+    [type]: data,
+  };
+};
+
 const StyledContainer = styled.div`
   display: flex;
-  background-color: #fcfcfc;
-  padding: 16px;
-  height: calc(100vh - 120px);
-  justify-content: space-between;
-  overflow: auto;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 `;
-
-const StyledFormContainer = styled.div`
-  width: 40%;
-  background-color: #f1f1f1;
+const StyledFormContainer = styled.form`
   display: flex;
   flex-direction: column;
+  background-color: #fccffc;
+  padding: 24px;
 `;
 
-const StyledPreviewContainer = styled.div`
-  width: 50%;
-  border: 1px solid #c1c1c1;
+const StyledInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  &:not(:first-of-type) {
+    margin-top: 8px;
+  }
+  & > label {
+    font-weight: bold;
+    color: #212121;
+  }
+  & > input,
+  & > select {
+    margin-top: 8px;
+    padding: 8px;
+  }
 `;
-class WidgetCreator extends React.Component {
-  state = {
-    headerTitle: 'Covid19 Tracker',
-    headerBackground: '#c5c2c4',
-    headerFontSize: 20,
-    headerFontColor: '#212121',
-    footerTitle: 'Covid19 Tracker 2020',
-    footerBackground: '#d5f6e3',
-    footerFontSize: 16,
-    footerFontColor: '#212121',
+
+const ButtonContainer = styled.div`
+  margin: 8px 0;
+`;
+
+const Button = styled.button`
+  padding: 8px;
+`;
+
+const WidgetCreator = (props) => {
+  const [state, dispatch] = useReducer(formReducer, {
+    headerText: 'Header text',
+    footerText: 'Footer Text',
+    selectedState: '',
     data: null,
-    state: '',
-  };
+    isLoading: true,
+    isError: false,
+  });
+  const {
+    headerText,
+    footerText,
+    selectedState,
+    data,
+    isLoading,
+    isError,
+  } = state;
+  const states = data ? Object.keys(data) : [];
 
-  componentDidMount() {
+  useEffect(() => {
     fetch('https://api.covid19india.org/state_district_wise.json')
       .then((res) => res.json())
       .then((data) => {
-        this.setState({
-          data,
-        });
+        dispatch({ type: 'data', data: data });
+        dispatch({ type: 'selectedState', data: Object.keys(data)[0] });
+        dispatch({ type: 'isLoading', data: false });
+        console.log('it is called');
       })
       .catch((err) => {
-        console.log('can not get data', err);
+        dispatch({ type: 'isLoading', data: false });
+        dispatch({ type: 'isError', data: true });
+        console.log(err);
       });
-  }
+  }, []);
 
-  handleInputChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    this.setState({
-      [name]: value,
-    });
+    dispatch({ type: name, data: value });
   };
 
-  handleFormSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    const {
-      headerTitle,
-      headerBackground,
-      headerFontSize,
-      headerFontColor,
-      footerTitle,
-      footerBackground,
-      footerFontSize,
-      footerFontColor,
-      state,
-    } = this.state;
+    const { headerText, footerText, selectedState } = state;
+    const data = { headerText, footerText, selectedState };
     const token = jwt.sign(
       {
-        data: {
-          headerTitle,
-          headerBackground,
-          headerFontSize,
-          headerFontColor,
-          footerTitle,
-          footerBackground,
-          footerFontSize,
-          footerFontColor,
-          state,
-        },
+        data: data,
       },
       'adityaagarwal81',
     );
-    console.log('widget url', `http://localhost:3000/widget/${token}`);
+    console.log(`http://localhost:3000/widget/${token}`);
   };
-  render() {
-    const {
-      headerTitle,
-      headerBackground,
-      headerFontSize,
-      headerFontColor,
-      footerTitle,
-      footerBackground,
-      footerFontSize,
-      footerFontColor,
-      data,
-      state,
-    } = this.state;
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  if (!isLoading && isError) {
+    return <p>There is some error getting the data</p>;
+  }
 
-    const stateOptions = data ? Object.keys(data) : [];
-    const stateData = stateOptions.reduce((acc, state) => {
-      const { districtData } = data[state];
-      acc[state] = Object.keys(districtData).reduce((acc, district) => {
-        const { active, confirmed, deceased, recovered } = districtData[
-          district
-        ];
-        acc.active = (acc.active || 0) + active;
-        acc.confirmed = confirmed + (acc.confirmed || 0);
-        acc.deceased = deceased + (acc.deceased || 0);
-        acc.recovered = recovered + (acc.recovered || 0);
-        return acc;
-      }, {});
-      return acc;
-    }, {});
-    const districtData = state
-      ? Object.keys(data[state].districtData).map((dist) => {
-          const distData = data[state].districtData[dist];
-          const { active, deceased, recovered, confirmed } = distData;
-          return {
-            name: dist,
-            active,
-            deceased,
-            recovered,
-            confirmed,
-          };
-        })
-      : [];
-    return (
-      <>
-        <Header title='Welcome to Widget Creator' />
-        <StyledContainer>
-          <StyledFormContainer>
-            <h4>Header Details</h4>
-            <form onSubmit={this.handleFormSubmit}>
-              <label>
-                Header title{' '}
-                <input
-                  type='text'
-                  value={headerTitle}
-                  name='headerTitle'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <label>
-                Header background{' '}
-                <input
-                  type='color'
-                  value={headerBackground}
-                  name='headerBackground'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <label>
-                Header Fontsize{' '}
-                <input
-                  type='number'
-                  min={14}
-                  max={28}
-                  value={headerFontSize}
-                  name='headerFontSize'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <label>
-                Header Text color{' '}
-                <input
-                  type='color'
-                  value={headerFontColor}
-                  name='headerFontColor'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <h4>Footer Details</h4>
-
-              <label>
-                Footer title{' '}
-                <input
-                  type='text'
-                  value={footerTitle}
-                  name='footerTitle'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <label>
-                Footer background{' '}
-                <input
-                  type='color'
-                  value={footerBackground}
-                  name='footerBackground'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <label>
-                Footer Fontsize{' '}
-                <input
-                  type='number'
-                  min={14}
-                  max={28}
-                  value={footerFontSize}
-                  name='footerFontSize'
-                  onChange={this.handleInputChange}
-                />
-              </label>
-              <label>
-                Footer Text color{' '}
-                <input
-                  type='color'
-                  value={footerFontColor}
-                  name='footerFontColor'
-                  onChange={this.handleInputChange}
-                />
-              </label>
+  return (
+    <div>
+      <h1>Welcome to widgetCreator</h1>
+      <StyledContainer>
+        <div>
+          <StyledFormContainer onSubmit={handleFormSubmit}>
+            <StyledInputContainer>
+              <label htmlFor='headerText'>Header Text</label>
+              <input
+                id='headerText'
+                name='headerText'
+                value={headerText}
+                onChange={handleInputChange}
+                required
+              />
+            </StyledInputContainer>
+            <StyledInputContainer>
+              <label htmlFor='footerText'>Footer Text</label>
+              <input
+                id='footerText'
+                name='footerText'
+                value={footerText}
+                onChange={handleInputChange}
+                required
+              />
+            </StyledInputContainer>
+            <StyledInputContainer>
+              <label htmlFor='selectedState'>Select State</label>
               <select
-                name='state'
-                value={state}
-                onChange={this.handleInputChange}
+                id='selectedState'
+                name='selectedState'
+                value={selectedState}
+                onChange={handleInputChange}
               >
-                <option value=''>Select a state</option>
-                {stateOptions.map((state) => (
-                  <option value={state} key={state}>
+                {states.map((state) => (
+                  <option key={state} value={state}>
                     {state}
                   </option>
                 ))}
               </select>
-              <button type='submit'>Get your widget</button>
-            </form>
+            </StyledInputContainer>
+            <ButtonContainer>
+              <Button type='submit'>Get your widget</Button>
+            </ButtonContainer>
           </StyledFormContainer>
-          <StyledPreviewContainer>
-            <Header
-              backgroundColor={headerBackground}
-              fontSize={headerFontSize}
-              color={headerFontColor}
-              title={headerTitle}
-            />
-            <h1>State Data</h1>
-            {JSON.stringify(stateData[state])}
-
-            <h1>Districts Data</h1>
-            {districtData.map((dist) => JSON.stringify(dist))}
-            <Footer
-              backgroundColor={footerBackground}
-              fontSize={footerFontSize}
-              color={footerFontColor}
-              title={footerTitle}
-            />
-          </StyledPreviewContainer>
-        </StyledContainer>
-        <Footer title='Thanks for using our services.' />
-      </>
-    );
-  }
-}
+        </div>
+        <h2>Widget Preview</h2>
+        {selectedState ? (
+          <WidgetPreview
+            headerText={headerText}
+            footerText={footerText}
+            data={data}
+            stateName={selectedState}
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </StyledContainer>
+    </div>
+  );
+};
 
 export default WidgetCreator;
