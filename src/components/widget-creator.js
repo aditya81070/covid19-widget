@@ -1,12 +1,22 @@
 import React, { useReducer, useEffect } from 'react';
-import styled from 'styled-components';
 import jwt from 'jsonwebtoken';
 import Header from './header';
 import Button from './button';
 import WidgetPreview from './widget-preview';
 import StyledTitle from './styled-title';
 import theme from '../theme';
-import EmbeddedCode from './embeddable-code';
+import EmbeddedCode from './embedded-code';
+import {
+  StyledContainer,
+  StyledFormContainer,
+  FormTitle,
+  StyledInputContainer,
+  InputRow,
+  InputRowItem,
+  ButtonContainer,
+  StyledPreviewContainer,
+} from './widget-creator.styles';
+
 const formReducer = (state, action) => {
   const { type, data } = action;
   return {
@@ -15,71 +25,6 @@ const formReducer = (state, action) => {
   };
 };
 
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: #f2f6ec;
-  align-items: center;
-  box-sizing: border-box;
-`;
-const StyledFormContainer = styled.form`
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  width: 100%;
-  box-sizing: border-box;
-  max-width: 800px;
-  padding: 24px;
-  box-shadow: 4px 4px 4px #9e7f5b;
-  margin-top: 16px;
-  border: 1px solid gray;
-`;
-
-const StyledInputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-  & > label {
-    font-weight: bold;
-    color: #212121;
-  }
-  & > input,
-  & > select {
-    margin-top: 8px;
-    padding: 8px;
-  }
-`;
-
-const InputRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`;
-
-const InputRowItem = styled(StyledInputContainer)`
-  width: 48%;
-  @media screen and (max-width: 568px) {
-    width: 100%;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  margin: 8px 0;
-`;
-
-const FormTitle = styled(StyledTitle)`
-  margin-top: 0;
-`;
-
-const StyledPreviewContainer = styled.div`
-  width: 100%;
-  max-width: 1200px;
-  border: 1px solid gray;
-  margin: 16px 0 16px;
-  box-shadow: 4px 4px 4px #9e7f5b;
-`;
 const WidgetCreator = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
     headerText: 'Header text',

@@ -59,7 +59,15 @@ class Widget extends React.Component {
       return <p>Loading preview...</p>;
     }
     if (!isLoading && isError) {
-      return <p>There is some error loading the data</p>;
+      return (
+        <p>
+          Something went wrong. Please check your network connection or try to
+          create new widget from{' '}
+          <a href='https://covid19-widget-creator.netlify.app' rel='noopener'>
+            Covid19 Widget Creator
+          </a>
+        </p>
+      );
     }
     return (
       <WidgetPreview
