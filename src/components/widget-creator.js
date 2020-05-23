@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import jwt from 'jsonwebtoken';
 import Header from './header';
@@ -31,6 +31,7 @@ const StyledFormContainer = styled.form`
   padding: 24px;
   box-shadow: 4px 4px 4px #9e7f5b;
   margin-top: 16px;
+  border: 1px solid gray;
 `;
 
 const StyledInputContainer = styled.div`
@@ -68,6 +69,11 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  background: #2c498d;
+  color: #fff;
 `;
 
 const FormTitle = styled(StyledTitle)`
@@ -81,6 +87,27 @@ const StyledPreviewContainer = styled.div`
   margin: 16px 0 16px;
   box-shadow: 4px 4px 4px #9e7f5b;
 `;
+const StyledCodeContainer = styled.div`
+  border: 1px solid gray;
+  padding: 0px 8px 8px;
+`;
+
+const StyledCode = styled.div`
+  border: 1px solid gray;
+  padding: 8px;
+  width: 100%;
+  word-break: break-word;
+  box-sizing: border-box;
+`;
+
+const CodeButtonContainer = styled.div`
+  display: flex;
+  margin-top: 16px;
+
+  & > button {
+    margin-left: 8px;
+  }
+`;
 const WidgetCreator = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
     headerText: 'Header text',
@@ -92,6 +119,7 @@ const WidgetCreator = (props) => {
     selectedState: '',
     width: 1200,
     height: 800,
+    token: '',
     data: null,
     isLoading: true,
     isError: false,
@@ -109,9 +137,11 @@ const WidgetCreator = (props) => {
     footerColor,
     width,
     height,
+    token,
   } = state;
   const states = data ? Object.keys(data) : [];
 
+  const codeRef = useRef();
   useEffect(() => {
     fetch('https://api.covid19india.org/state_district_wise.json')
       .then((res) => res.json())
@@ -153,13 +183,42 @@ const WidgetCreator = (props) => {
       footerBackground,
       footerColor,
     };
-    const token = jwt.sign(
+    const jwtToken = jwt.sign(
       {
         data: data,
       },
       'adityaagarwal81',
     );
-    console.log(`http://localhost:3000/widget/${token}`);
+    dispatch({ type: 'token', data: jwtToken });
+  };
+
+  const handleCopyCode = (e) => {
+    const textarea = document.createElement('textarea');
+    textarea.style.position = 'fixed';
+    textarea.style.top = 0;
+    textarea.style.left = 0;
+
+    textarea.style.border = 'none';
+    textarea.style.outline = 'none';
+    textarea.style.boxShadow = 'none';
+    // Avoid flash of white box if rendered for any reason.
+    textarea.style.background = 'transparent';
+    textarea.value = codeRef.current.textContent;
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    let success = false;
+    try {
+      success = document.execCommand('copy');
+    } catch (err) {
+      success = false;
+    }
+    document.body.removeChild(textarea);
+    if (success) {
+      window.alert('code copied to clipboard');
+    } else {
+      window.alert('can not copy. Please try manually');
+    }
   };
   if (isLoading) {
     return <p>Loading...</p>;
@@ -167,7 +226,6 @@ const WidgetCreator = (props) => {
   if (!isLoading && isError) {
     return <p>There is some error getting the data</p>;
   }
-
   return (
     <div>
       <Header title='Welcome to Widget Creator' />
@@ -278,6 +336,27 @@ const WidgetCreator = (props) => {
           <ButtonContainer>
             <Button type='submit'>Get your widget</Button>
           </ButtonContainer>
+          {token && (
+            <StyledCodeContainer>
+              <StyledTitle>Add following code to your website</StyledTitle>
+              <StyledCode>
+                <code ref={codeRef}>
+                  {`<iframe title="${selectedState}'s Covid19 data" src="http://localhost:3000/widget/${token}" width="${width}" height="${height}" loading="lazy">Browser do not support iframe </iframe>`}
+                </code>
+              </StyledCode>
+              <CodeButtonContainer>
+                <Button type='button' onClick={handleCopyCode}>
+                  Copy
+                </Button>
+                <Button
+                  type='button'
+                  onClick={() => dispatch({ type: 'token', data: '' })}
+                >
+                  Close
+                </Button>
+              </CodeButtonContainer>
+            </StyledCodeContainer>
+          )}
         </StyledFormContainer>
         <StyledTitle>Widget Preview</StyledTitle>
         <StyledPreviewContainer>
