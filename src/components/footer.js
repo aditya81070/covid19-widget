@@ -3,26 +3,25 @@ import styled from 'styled-components';
 
 const StyledFooterContainer = styled.div.attrs((props) => ({
   style: {
-    backgroundColor: props.backgroundColor || '#d5f6e3',
+    background:
+      props.backgroundColor ||
+      'linear-gradient(to bottom, #0f7f8f 0%, #185784 100%)',
   },
 }))`
-  height: 80px;
+  min-height: 56px;
   width: 100%;
   display: flex;
   align-items: center;
-  overflow: auto;
   justify-content: center;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 8px;
 `;
-const StyledFooterText = styled.div.attrs((props) => ({
+const StyledFooterText = styled.p.attrs((props) => ({
   style: {
-    fontSize: `${props.fontSize || 16}px`,
-    color: props.color || '#212121',
+    fontSize: `${props.fontSize || 20}px`,
+    color: props.color || '#fff',
   },
 }))`
-  overflow: hidden;
-  font-size: 16px;
   max-width: 80%;
   text-align: center;
 `;

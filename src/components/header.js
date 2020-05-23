@@ -3,21 +3,22 @@ import styled from 'styled-components';
 
 const StyledHeader = styled.header.attrs((props) => ({
   style: {
-    backgroundColor: props.backgroundColor || '#c5c2c4',
+    backgroundColor: props.backgroundColor || '#2c498d',
   },
 }))`
   display: flex;
   align-items: center;
-  height: 40px;
+  min-height: 56px;
   width: 100%;
   box-sizing: border-box;
-  padding: 0px 16px;
+  justify-content: center;
+  padding: 8px;
 `;
 
 const StyledHeading = styled.h1.attrs((props) => ({
   style: {
     fontSize: `${props.fontSize || 20}px`,
-    color: props.color || '#212121',
+    color: props.color || '#fff',
   },
 }))``;
 const Header = ({ title, backgroundColor, fontSize, color }) => {

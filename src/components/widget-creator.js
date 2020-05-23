@@ -1,8 +1,9 @@
-import React, { useReducer, useMemo, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import styled from 'styled-components';
-import WidgetPreview from './widget-preview';
 import jwt from 'jsonwebtoken';
-
+import Header from './header';
+import WidgetPreview from './widget-preview';
+import StyledTitle from './styled-title';
 const formReducer = (state, action) => {
   const { type, data } = action;
   return {
@@ -15,14 +16,20 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  background-color: #f2f6ec;
+  align-items: center;
+  box-sizing: border-box;
 `;
 const StyledFormContainer = styled.form`
   display: flex;
   flex-direction: column;
-  background-color: #fccffc;
+  background-color: white;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 800px;
   padding: 24px;
+  box-shadow: 4px 4px 4px #9e7f5b;
+  margin-top: 16px;
 `;
 
 const StyledInputContainer = styled.div`
@@ -50,6 +57,17 @@ const Button = styled.button`
   padding: 8px;
 `;
 
+const FormTitle = styled(StyledTitle)`
+  margin-top: 0;
+`;
+
+const StyledPreviewContainer = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  border: 1px solid gray;
+  margin: 16px 0 16px;
+  box-shadow: 4px 4px 4px #9e7f5b;
+`;
 const WidgetCreator = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
     headerText: 'Header text',
@@ -111,61 +129,58 @@ const WidgetCreator = (props) => {
 
   return (
     <div>
-      <h1>Welcome to widgetCreator</h1>
+      <Header title='Welcome to Widget Creator' />
       <StyledContainer>
-        <div>
-          <StyledFormContainer onSubmit={handleFormSubmit}>
-            <StyledInputContainer>
-              <label htmlFor='headerText'>Header Text</label>
-              <input
-                id='headerText'
-                name='headerText'
-                value={headerText}
-                onChange={handleInputChange}
-                required
-              />
-            </StyledInputContainer>
-            <StyledInputContainer>
-              <label htmlFor='footerText'>Footer Text</label>
-              <input
-                id='footerText'
-                name='footerText'
-                value={footerText}
-                onChange={handleInputChange}
-                required
-              />
-            </StyledInputContainer>
-            <StyledInputContainer>
-              <label htmlFor='selectedState'>Select State</label>
-              <select
-                id='selectedState'
-                name='selectedState'
-                value={selectedState}
-                onChange={handleInputChange}
-              >
-                {states.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
-            </StyledInputContainer>
-            <ButtonContainer>
-              <Button type='submit'>Get your widget</Button>
-            </ButtonContainer>
-          </StyledFormContainer>
-        </div>
-        <h2>Widget Preview</h2>
-        {selectedState ? (
+        <StyledFormContainer onSubmit={handleFormSubmit}>
+          <FormTitle>Enter Widget Details</FormTitle>
+          <StyledInputContainer>
+            <label htmlFor='headerText'>Header Text</label>
+            <input
+              id='headerText'
+              name='headerText'
+              value={headerText}
+              onChange={handleInputChange}
+              required
+            />
+          </StyledInputContainer>
+          <StyledInputContainer>
+            <label htmlFor='footerText'>Footer Text</label>
+            <input
+              id='footerText'
+              name='footerText'
+              value={footerText}
+              onChange={handleInputChange}
+              required
+            />
+          </StyledInputContainer>
+          <StyledInputContainer>
+            <label htmlFor='selectedState'>Select State</label>
+            <select
+              id='selectedState'
+              name='selectedState'
+              value={selectedState}
+              onChange={handleInputChange}
+            >
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </StyledInputContainer>
+          <ButtonContainer>
+            <Button type='submit'>Get your widget</Button>
+          </ButtonContainer>
+        </StyledFormContainer>
+        <StyledTitle>Widget Preview</StyledTitle>
+        <StyledPreviewContainer>
           <WidgetPreview
             headerText={headerText}
             footerText={footerText}
             data={data}
             stateName={selectedState}
           />
-        ) : (
-          <p>Loading...</p>
-        )}
+        </StyledPreviewContainer>
       </StyledContainer>
     </div>
   );

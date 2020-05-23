@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import StyledTitle from './styled-title';
 
 const PreviewContainer = styled.div`
   padding: 16px 0px;
+  background-color: #fff;
 `;
 const TileContainer = styled.div`
   display: flex;
@@ -22,6 +24,7 @@ const Tile = styled.div`
   justify-content: center;
   align-items: center;
   margin: 8px;
+  background: linear-gradient(to bottom, #a5c9fd 0%, #bde5fc 100%);
 `;
 
 const StyledStatusContainer = styled.div`
@@ -29,17 +32,17 @@ const StyledStatusContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
 const StatusRow = styled.div`
   & > * {
     margin-top: 8px;
   }
 `;
-const StyledTitle = styled.h4`
-  text-align: center;
-  margin: 16px 0px;
+const StyledName = styled.p`
   font-size: 20px;
+  font-weight: 600;
+  color: #212121;
 `;
-
 const PreviewData = React.memo(function PreviewData({ data, state }) {
   console.log('it is called');
   const { districtData } = data[state];
@@ -58,25 +61,25 @@ const PreviewData = React.memo(function PreviewData({ data, state }) {
       <TileContainer>
         {Object.keys(stateData).map((status) => (
           <Tile key={status}>
-            <p>{status.toUpperCase()}</p>
+            <StyledName>{stateData[status]}</StyledName>
             <StatusRow>
-              <p>{stateData[status]}</p>
+              <StyledName>{status.toUpperCase()}</StyledName>
             </StatusRow>
           </Tile>
         ))}
       </TileContainer>
-      <StyledTitle>District wise data</StyledTitle>
+      <StyledTitle>District Level Data</StyledTitle>
       <TileContainer>
         {Object.keys(districtData).map((district) => (
           <Tile key={district}>
-            <p>{district}</p>
+            <StyledName>{district}</StyledName>
             <StyledStatusContainer>
               <StatusRow>
                 <p>Active: {districtData[district].active}</p>
                 <p>Confirmed: {districtData[district].confirmed}</p>
               </StatusRow>
               <StatusRow>
-                <p>Deceased: {districtData[district].deceased}</p>
+                <p>Deaths: {districtData[district].deceased}</p>
                 <p>Recovered: {districtData[district].recovered}</p>
               </StatusRow>
             </StyledStatusContainer>
