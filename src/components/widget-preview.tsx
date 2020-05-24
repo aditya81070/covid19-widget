@@ -1,8 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
 import Header from './header';
 import Footer from './footer';
 import PreviewData from './preview-data';
-import styled from 'styled-components';
+import { dataType } from '../types';
 
 const StyledPreviewContainer = styled.div`
   width: 100%;
@@ -10,7 +11,17 @@ const StyledPreviewContainer = styled.div`
   overflow-y: auto;
 `;
 
-const WidgetPreview = ({
+export type WidgetPreviewProps = {
+  headerText: string;
+  stateName: string;
+  data: dataType | null;
+  footerText: string;
+  footerBackground: string;
+  footerColor: string;
+  headerBackground: string;
+  headerColor: string;
+};
+const WidgetPreview: React.FC<WidgetPreviewProps> = ({
   headerText,
   stateName,
   data,

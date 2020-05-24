@@ -6,6 +6,7 @@ import WidgetPreview from './widget-preview';
 import StyledTitle from './styled-title';
 import theme from '../theme';
 import EmbeddedCode from './embedded-code';
+import { dataType, JwtData } from '../types';
 import {
   StyledContainer,
   StyledFormContainer,
@@ -28,7 +29,7 @@ export type widgetCreatorState = {
   width: number;
   height: number;
   token: string;
-  data: null | object;
+  data: dataType | null;
   isLoading: boolean;
   isError: boolean;
 };
@@ -37,6 +38,7 @@ export type widgetCreatorAction = {
   type: string;
   data: string | boolean | number | object;
 };
+
 const formReducer = (
   state: widgetCreatorState,
   action: widgetCreatorAction,
@@ -48,7 +50,7 @@ const formReducer = (
   };
 };
 export type widgetCreatorProps = {};
-const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
+export const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
     headerText: 'Header text',
     footerText: 'Footer Text',
@@ -115,7 +117,7 @@ const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
       footerBackground,
       footerColor,
     } = state;
-    const data = {
+    const data: JwtData = {
       headerText,
       footerText,
       selectedState,
@@ -268,7 +270,7 @@ const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
             footerText={footerText}
             footerBackground={footerBackground}
             footerColor={footerColor}
-            data={data}
+            data={data as dataType}
             stateName={selectedState}
           />
         </StyledPreviewContainer>

@@ -1,26 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import StyledTitle from './styled-title';
-
-export type covidStatusType = 'active' | 'recovered' | 'deceased' | 'confirmed';
-export type covidDataType = {
-  [status in covidStatusType]: number;
-};
-export type districtType = {
-  [district: string]: {
-    active: number;
-    recovered: number;
-    confirmed: number;
-    deceased: number;
-    [key: string]: object | number | string;
-  };
-};
-export type dataType = {
-  [state: string]: {
-    districtData: districtType;
-    [key: string]: object | number | string;
-  };
-};
+import { covidStatusType, covidDataType, dataType } from '../types';
 const PreviewContainer = styled.div`
   padding: 16px 0px;
   background-color: #fff;
@@ -65,12 +46,12 @@ const StyledName = styled.p`
 
 export type previewDataProps = {
   state: string;
-  data: dataType;
+  data: dataType | null;
 };
 const PreviewData: React.FC<previewDataProps> = React.memo(
   function PreviewData({ data, state }) {
     console.log('it is called');
-    const { districtData } = data[state];
+    const { districtData } = data![state];
     const stateData: covidDataType = Object.keys(districtData).reduce(
       (acc, district) => {
         const { active, deceased, confirmed, recovered } = districtData[

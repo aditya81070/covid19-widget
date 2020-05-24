@@ -1,8 +1,31 @@
 import React from 'react';
 import WidgetPreview from './widget-preview';
 import jwt from 'jsonwebtoken';
+import { RouteComponentProps } from 'react-router-dom';
+import { dataType, JwtData } from '../types';
 
-class Widget extends React.Component {
+export type MatchProps = {
+  id: string;
+};
+
+export type WidgetProps = {} & RouteComponentProps<MatchProps>;
+export type WidgetState = {
+  headerText: string;
+  footerText: string;
+  selectedState: string;
+  headerColor: string;
+  headerBackground: string;
+  footerBackground: string;
+  footerColor: string;
+  data: null | dataType;
+  isError: boolean;
+  isLoading: boolean;
+};
+
+export type decodedData = {
+  data: JwtData;
+};
+class Widget extends React.Component<WidgetProps, WidgetState> {
   state = {
     headerText: '',
     footerText: '',
@@ -23,22 +46,24 @@ class Widget extends React.Component {
         this.setState({ isError: true, isLoading: false });
         console.log('the link is expired. Please create new widget');
       } else {
-        fetch('https://api.covid19india.org/state_district_wise.json')
-          .then((res) => res.json())
-          .then((data) => {
-            this.setState({
-              ...decoded.data,
-              data,
-              isLoading: false,
+        if (decoded) {
+          fetch('https://api.covid19india.org/state_district_wise.json')
+            .then((res) => res.json())
+            .then((data: dataType) => {
+              this.setState({
+                ...(decoded as decodedData).data,
+                data,
+                isLoading: false,
+              });
+            })
+            .catch((err) => {
+              this.setState({
+                isLoading: false,
+                isError: true,
+              });
+              console.log('can not get data', err);
             });
-          })
-          .catch((err) => {
-            this.setState({
-              isLoading: false,
-              isError: true,
-            });
-            console.log('can not get data', err);
-          });
+        }
       }
     });
   }
