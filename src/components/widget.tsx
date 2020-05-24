@@ -41,31 +41,35 @@ class Widget extends React.Component<WidgetProps, WidgetState> {
 
   componentDidMount() {
     const { id } = this.props.match.params;
-    jwt.verify(id, 'adityaagarwal81', (err, decoded) => {
-      if (err) {
-        this.setState({ isError: true, isLoading: false });
-        console.log('the link is expired. Please create new widget');
-      } else {
-        if (decoded) {
-          fetch('https://api.covid19india.org/state_district_wise.json')
-            .then((res) => res.json())
-            .then((data: dataType) => {
-              this.setState({
-                ...(decoded as decodedData).data,
-                data,
-                isLoading: false,
+    jwt.verify(
+      id,
+      process.env.REACT_APP_PRIVATE_KEY as jwt.Secret,
+      (err, decoded) => {
+        if (err) {
+          this.setState({ isError: true, isLoading: false });
+          console.log('the link is expired. Please create new widget');
+        } else {
+          if (decoded) {
+            fetch(`${process.env.REACT_APP_COVID_API_URL}`)
+              .then((res) => res.json())
+              .then((data: dataType) => {
+                this.setState({
+                  ...(decoded as decodedData).data,
+                  data,
+                  isLoading: false,
+                });
+              })
+              .catch((err) => {
+                this.setState({
+                  isLoading: false,
+                  isError: true,
+                });
+                console.log('can not get data', err);
               });
-            })
-            .catch((err) => {
-              this.setState({
-                isLoading: false,
-                isError: true,
-              });
-              console.log('can not get data', err);
-            });
+          }
         }
-      }
-    });
+      },
+    );
   }
   render() {
     const {

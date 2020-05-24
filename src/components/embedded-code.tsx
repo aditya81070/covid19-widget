@@ -73,7 +73,7 @@ const EmbeddedCode: React.FC<embeddedCodeProps> = ({
       <StyledTitle>Add following code to your website</StyledTitle>
       <StyledCode>
         <code ref={codeRef}>
-          {`<iframe title="${stateName}'s Covid19 data" src="http://localhost:3000/widget/${token}" width="${width}" height="${height}" loading="lazy">Browser do not support iframe </iframe>`}
+          {`<iframe title="${stateName}'s Covid19 data" src="${process.env.REACT_APP_API_URL}/widget/${token}" width="${width}" height="${height}" loading="lazy">Browser do not support iframe </iframe>`}
         </code>
       </StyledCode>
       <CodeButtonContainer>

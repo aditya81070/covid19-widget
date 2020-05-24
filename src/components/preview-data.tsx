@@ -50,7 +50,9 @@ export type previewDataProps = {
 };
 const PreviewData: React.FC<previewDataProps> = React.memo(
   function PreviewData({ data, state }) {
-    console.log('it is called');
+    if (!data) {
+      return <p>Loading...</p>;
+    }
     const { districtData } = data![state];
     const stateData: covidDataType = Object.keys(districtData).reduce(
       (acc, district) => {

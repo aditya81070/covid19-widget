@@ -84,7 +84,7 @@ export const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
   const states = data ? Object.keys(data) : [];
 
   useEffect(() => {
-    fetch('https://api.covid19india.org/state_district_wise.json')
+    fetch(`${process.env.REACT_APP_COVID_API_URL}`)
       .then((res) => res.json())
       .then((data) => {
         dispatch({ type: 'data', data: data });
@@ -130,7 +130,7 @@ export const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
       {
         data: data,
       },
-      'adityaagarwal81',
+      process.env.REACT_APP_PRIVATE_KEY as jwt.Secret,
     );
     dispatch({ type: 'token', data: jwtToken });
   };
