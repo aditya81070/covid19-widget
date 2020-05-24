@@ -4,6 +4,7 @@ import GlobalStyles from './global-styles';
 import dotenv from 'dotenv';
 const WidgetCreator = lazy(() => import('./widget-creator'));
 const Widget = lazy(() => import('./widget'));
+const NotFound = lazy(() => import('./not-found'));
 dotenv.config();
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <WidgetCreator />
         </Route>
         <Route path='/widget/:id' component={Widget} />
+        <Route component={NotFound} />
       </Switch>
     </Suspense>
   );
