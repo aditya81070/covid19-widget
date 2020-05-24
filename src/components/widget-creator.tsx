@@ -17,15 +17,38 @@ import {
   StyledPreviewContainer,
 } from './widget-creator.styles';
 
-const formReducer = (state, action) => {
+export type widgetCreatorState = {
+  headerText: string;
+  footerText: string;
+  headerColor: string;
+  headerBackground: string;
+  footerBackground: string;
+  footerColor: string;
+  selectedState: string;
+  width: number;
+  height: number;
+  token: string;
+  data: null | object;
+  isLoading: boolean;
+  isError: boolean;
+};
+
+export type widgetCreatorAction = {
+  type: string;
+  data: string | boolean | number | object;
+};
+const formReducer = (
+  state: widgetCreatorState,
+  action: widgetCreatorAction,
+) => {
   const { type, data } = action;
   return {
     ...state,
     [type]: data,
   };
 };
-
-const WidgetCreator = (props) => {
+export type widgetCreatorProps = {};
+const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
   const [state, dispatch] = useReducer(formReducer, {
     headerText: 'Header text',
     footerText: 'Footer Text',
@@ -74,12 +97,14 @@ const WidgetCreator = (props) => {
       });
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     dispatch({ type: name, data: value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {
       headerText,

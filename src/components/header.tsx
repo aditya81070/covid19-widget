@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 export type headerContainerProps = {
-  background: string;
+  background?: string;
 };
 const StyledHeader = styled.header.attrs((props: headerContainerProps) => ({
   style: {
@@ -28,8 +28,8 @@ const StyledHeading = styled.h1.attrs((props) => ({
 
 export type headerProps = {
   title: string;
-  background: string;
-  color: string;
+  background?: string;
+  color?: string;
 };
 const Header: React.FC<headerProps> = ({ title, background, color }) => {
   return (
