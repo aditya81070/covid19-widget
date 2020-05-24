@@ -92,7 +92,7 @@ class Widget extends React.Component<WidgetProps, WidgetState> {
         <p>
           Something went wrong. Please check your network connection or try to
           create new widget from{' '}
-          <a href='https://covid19-widget-creator.netlify.app' rel='noopener'>
+          <a href={`${process.env.REACT_APP_API_URL}`} rel='noopener'>
             Covid19 Widget Creator
           </a>
         </p>

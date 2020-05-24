@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 export type footerContainerProps = {
-  background: string;
+  background?: string;
 };
 const StyledFooterContainer = styled.div.attrs(
   (props: footerContainerProps) => ({
@@ -36,8 +36,8 @@ const StyledFooterText = styled.p.attrs<footerTextProps>(({ color }) => ({
 
 export type footerProps = {
   title: string;
-  background: string;
-  color: string;
+  background?: string;
+  color?: string;
 };
 
 const Footer: React.FC<footerProps> = ({ title, background, color }) => {

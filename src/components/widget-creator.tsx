@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import jwt from 'jsonwebtoken';
 import Header from './header';
+import Footer from './footer';
 import Button from './button';
 import WidgetPreview from './widget-preview';
 import StyledTitle from './styled-title';
@@ -275,6 +276,7 @@ export const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
           />
         </StyledPreviewContainer>
       </StyledContainer>
+      <Footer title='This site is created and maintained by @aditya81070(Github)' />
     </div>
   );
 };
