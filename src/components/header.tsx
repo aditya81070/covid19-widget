@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledHeader = styled.header.attrs((props) => ({
+export type headerContainerProps = {
+  background: string;
+};
+const StyledHeader = styled.header.attrs((props: headerContainerProps) => ({
   style: {
     background: props.background || '#2c498d',
   },
-}))`
+}))<headerContainerProps>`
   display: flex;
   align-items: center;
   min-height: 56px;
@@ -22,7 +25,13 @@ const StyledHeading = styled.h1.attrs((props) => ({
 }))`
   font-size: 20px;
 `;
-const Header = ({ title, background, color }) => {
+
+export type headerProps = {
+  title: string;
+  background: string;
+  color: string;
+};
+const Header: React.FC<headerProps> = ({ title, background, color }) => {
   return (
     <StyledHeader background={background}>
       <StyledHeading color={color}>{title}</StyledHeading>

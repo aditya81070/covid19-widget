@@ -25,20 +25,33 @@ const CodeButtonContainer = styled.div`
   }
 `;
 
-const EmbeddedCode = ({ token, stateName, dispatch, width, height }) => {
-  const codeRef = useRef();
-  const handleCopyCode = (e) => {
+export type embeddedCodeProps = {
+  token: string;
+  stateName: string;
+  dispatch: (action: any) => void;
+  width: number;
+  height: number;
+};
+const EmbeddedCode: React.FC<embeddedCodeProps> = ({
+  token,
+  stateName,
+  dispatch,
+  width,
+  height,
+}) => {
+  const codeRef = useRef<HTMLElement>(null!);
+  const handleCopyCode = (e: React.MouseEvent<HTMLButtonElement>) => {
     const textarea = document.createElement('textarea');
     textarea.style.position = 'fixed';
-    textarea.style.top = 0;
-    textarea.style.left = 0;
+    textarea.style.top = '0px';
+    textarea.style.left = '0px';
 
     textarea.style.border = 'none';
     textarea.style.outline = 'none';
     textarea.style.boxShadow = 'none';
     // Avoid flash of white box if rendered for any reason.
     textarea.style.background = 'transparent';
-    textarea.value = codeRef.current.textContent;
+    textarea.value = codeRef.current.textContent as string;
     document.body.appendChild(textarea);
     textarea.focus();
     textarea.select();
