@@ -14,7 +14,7 @@ const TileContainer = styled.div`
 `;
 
 const Tile = styled.div`
-  width: 300px;
+  width: 350px;
   height: 100px;
   border: 1px solid black;
   padding: 8px;
@@ -25,6 +25,22 @@ const Tile = styled.div`
   align-items: center;
   margin: 8px;
   background: linear-gradient(to bottom, #a5c9fd 0%, #bde5fc 100%);
+
+  @media screen and (max-width: 1100px) {
+    width: 300px;
+  }
+  @media screen and (max-width: 950px) {
+    width: 250px;
+  }
+  @media screen and (max-width: 800px) {
+    width: 300px;
+  }
+  @media screen and (max-width: 540px) {
+    width: 80%;
+  }
+  @media screen and (max-width: 400px) {
+    width: 100%;
+  }
 `;
 
 const StyledStatusContainer = styled.div`
