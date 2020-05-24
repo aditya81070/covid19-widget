@@ -1,3 +1,10 @@
+## Additional notes
+
+- Please add the environment variables that are mentioned into the `.env.sample`
+- `REACT_APP_API_URL`: It is the url on which the app is running (without forward slash)
+  - Most of the time, it will be `http://localhost:3000`
+- `REACT_APP_PRIVATE_KEY`: it is the private key by which jwt token is signed. You can use any local private key for the local use and it will be used everywhere.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
