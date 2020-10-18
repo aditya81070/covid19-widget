@@ -100,6 +100,20 @@ export const WidgetCreator: React.FC<widgetCreatorProps> = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    dispatch({ type: 'token', data: '' });
+  }, [
+    headerText,
+    footerText,
+    selectedState,
+    headerBackground,
+    headerColor,
+    footerBackground,
+    footerColor,
+    width,
+    height,
+  ]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
